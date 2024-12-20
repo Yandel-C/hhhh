@@ -1,0 +1,88 @@
+<!DOCTYPE html>  
+<html lang="es">  
+<head>  
+    <meta charset="UTF-8">  
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">  
+    <title>Verificar Pago de Bitcoin</title>  
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">  
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">  
+    <style>  
+        body {  
+            background-color: #f8f9fa;  
+            font-family: Arial, sans-serif;  
+        }  
+        .container {  
+            margin-top: 50px;  
+            max-width: 600px;  
+        }  
+        .card {  
+            border: none;  
+            border-radius: 10px;  
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);  
+        }  
+        .card-header {  
+            background-color: #007bff;  
+            color: white;  
+            border-top-left-radius: 10px;  
+            border-top-right-radius: 10px;  
+        }  
+        .btn-primary {  
+            background-color: #007bff;  
+            border: none;  
+        }  
+        .btn-primary:hover {  
+            background-color: #0056b3;  
+        }  
+        .result {  
+            margin-top: 20px;  
+        }  
+    </style>  
+</head>  
+<body>  
+    <div class="container">  
+        <div class="card">  
+            <div class="card-header text-center">  
+                <h3>Verificar Pago de Bitcoin</h3>  
+            </div>  
+            <div class="card-body">  
+                <form id="paymentForm">  
+                    <div class="form-group">  
+                        <label for="payId">ID de Pago (pay_id):</label>  
+                        <input type="text" class="form-control" id="payId" name="pay_id" required placeholder="Ingresa el ID de pago">  
+                    </div>  
+                    <button type="submit" class="btn btn-primary btn-block">Verificar</button>  
+                </form>  
+                <div class="result" id="result"></div>  
+            </div>  
+        </div>  
+    </div>  
+
+    <script>  
+        document.getElementById('paymentForm').addEventListener('submit', async function(event) {  
+            event.preventDefault(); // Evitar el envío del formulario  
+
+            const payId = document.getElementById('payId').value;  
+            const resultDiv = document.getElementById('result');  
+
+            try {  
+                const response = await fetch(`http://localhost:3000/verificar-pago/${payId}`, {  
+                    method: 'GET',  
+                    headers: {  
+                        'X-Api-Key': 'ba2b550006a84befb4b3edec61f04272' // Reemplaza con tu clave de API  
+                    }  
+                });  
+
+                const data = await response.json();  
+
+                if (response.ok) {  
+                    resultDiv.innerHTML = `<div class="alert alert-success">Pago verificado: ${JSON.stringify(data)}</div>`;  
+                } else {  
+                    resultDiv.innerHTML = `<div class="alert alert-danger">Error: ${data.error}</div>`;  
+                }  
+            } catch (error) {  
+                resultDiv.innerHTML = `<div class="alert alert-danger">Error al verificar el pago: ${error.message}</div>`;  
+            }  
+        });  
+    </script>  
+</body>  
+</html>
